@@ -13,6 +13,8 @@ Get Next Version is a GitHub Action that calculates the next semantic version (m
     increment: patch
     # optional: manually set a version instead of auto-incrementing
     version: null
+    # optional: add "v" prefix to version
+    use_v_prefix: null
 
 - name: Create release
   uses: softprops/action-gh-release@v2
