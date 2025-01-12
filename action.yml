@@ -25,7 +25,7 @@ runs:
         if [[ -n "$INPUT_VERSION" ]]; then
           if [[ "$INPUT_VERSION" =~ ^v?[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
             if [[ "${INPUT_VERSION:0:1}" == "v" ]]; then
-              echo "use_v_prefix=false" >> "$GITHUB_ENV"
+              echo "V_PREFIX_EXISTS=true" >> "$GITHUB_ENV"
             fi
 
             echo "Manually provided version: $INPUT_VERSION"
@@ -85,11 +85,12 @@ runs:
       shell: bash
       env:
         USE_V_PREFIX: ${{ inputs.use_v_prefix }}
+        V_PREFIX_EXISTS: ${{ env.V_PREFIX_EXISTS }}
       run: |
         new_version="${{ env.new_version }}"
 
         USE_V_PREFIX="${USE_V_PREFIX,,}"
-        if [[ "$USE_V_PREFIX" == "true" ]]; then
+        if [[ "$USE_V_PREFIX" == "true" && -z "$V_PREFIX_EXISTS" ]]; then
           new_version="v$new_version"
         fi
 
