@@ -23,6 +23,27 @@ Get Next Version is a GitHub Action that calculates the next semantic version (m
     tag_name: ${{ steps.get_version.outputs.new_version }}
 ```
 
+This action can be combined with `workflow_dispatch` inputs to create a GUI for automating releases more easily:
+
+```yml
+on:
+  workflow_dispatch:
+    inputs:
+      increment:
+        description: "Which part of the version to increment"
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
+        default: "patch"
+        required: true
+
+      version:
+        description: "Override version increment"
+        required: false
+```
+
 ## Notes
 
 - If no previous tag exists, defaults to 0.1.0
