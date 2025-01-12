@@ -22,10 +22,11 @@ runs:
       run: |
         if [[ -n "${{ inputs.version }}" ]]; then
           if [[ "${{ inputs.version }}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Manually provided version: ${{ inputs.version }}"
             echo "new_version=${{ inputs.version }}" >> "$GITHUB_ENV"
             echo "new_version=${{ inputs.version }}" >> "$GITHUB_OUTPUT"
           else
-            echo "Invalid version format" >&2
+            echo "Invalid version format: ${{ inputs.version }}" >&2
             exit 1
           fi
         fi
@@ -46,6 +47,7 @@ runs:
       if: ${{ steps.previous_tag.outputs.tag == '' || steps.previous_tag.outputs.tag == null }}
       shell: bash
       run: |
+        echo "No previous tag found. Using default version: 0.1.0"
         echo "new_version=0.1.0" >> "$GITHUB_ENV"
         echo "new_version=0.1.0" >> "$GITHUB_OUTPUT"
 
@@ -70,4 +72,5 @@ runs:
         else
           new_version=${{ steps.semvers.outputs.v_patch }}
         fi
+        echo "New version: $new_version"
         echo "new_version=$new_version" >> "$GITHUB_OUTPUT"
