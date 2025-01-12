@@ -9,6 +9,10 @@ inputs:
   version:
     description: "Override version increment"
     required: false
+  use_v_prefix:
+    description: "Prefix the version with 'v'"
+    required: false
+    default: "false"
 
 runs:
   using: "composite"
@@ -19,8 +23,8 @@ runs:
         if [[ -n "${{ inputs.version }}" ]]; then
           if [[ "${{ inputs.version }}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
             echo "Manually provided version: ${{ inputs.version }}"
-            echo "new_version=${{ inputs.version }}" >> "$GITHUB_ENV"
             echo "new_version=${{ inputs.version }}" >> "$GITHUB_OUTPUT"
+            exit 0
           else
             echo "Invalid version format: ${{ inputs.version }}" >&2
             exit 1
@@ -40,12 +44,14 @@ runs:
       uses: "WyriHaximus/github-action-get-previous-tag@v1"
 
     - name: Set default version if no tags exist
-      if: ${{ steps.previous_tag.outputs.tag == '' || steps.previous_tag.outputs.tag == null }}
+      if: ${{ env.new_version == '' }}
       shell: bash
       run: |
-        echo "No previous tag found. Using default version: 0.1.0"
-        echo "new_version=0.1.0" >> "$GITHUB_ENV"
-        echo "new_version=0.1.0" >> "$GITHUB_OUTPUT"
+        if [[ -z "${{ steps.previous_tag.outputs.tag }}" ]]; then
+          echo "No previous tag found. Using default version: 0.1.0"
+          echo "new_version=0.1.0" >> "$GITHUB_OUTPUT"
+          exit 0
+        fi
 
     - name: Get next versions
       if: ${{ env.new_version == '' }}
@@ -60,6 +66,7 @@ runs:
       shell: bash
       env:
         INCREMENT: ${{ inputs.increment }}
+        USE_V_PREFIX: ${{ inputs.use_v_prefix }}
       run: |
         if [[ "$INCREMENT" == "major" ]]; then
           new_version=${{ steps.semvers.outputs.major }}
@@ -68,6 +75,12 @@ runs:
         else
           new_version=${{ steps.semvers.outputs.patch }}
         fi
+
+        USE_V_PREFIX="${USE_V_PREFIX,,}"
+        if [[ "$USE_V_PREFIX" == "true" ]]; then
+          new_version="v$new_version"
+        fi
+
         echo "New version: $new_version"
         echo "new_version=$new_version" >> "$GITHUB_OUTPUT"
 
