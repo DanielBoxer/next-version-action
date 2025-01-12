@@ -62,11 +62,11 @@ runs:
         INCREMENT: ${{ inputs.increment }}
       run: |
         if [[ "$INCREMENT" == "major" ]]; then
-          new_version=${{ steps.semvers.outputs.v_major }}
+          new_version=${{ steps.semvers.outputs.major }}
         elif [[ "$INCREMENT" == "minor" ]]; then
-          new_version=${{ steps.semvers.outputs.v_minor }}
+          new_version=${{ steps.semvers.outputs.minor }}
         else
-          new_version=${{ steps.semvers.outputs.v_patch }}
+          new_version=${{ steps.semvers.outputs.patch }}
         fi
         echo "New version: $new_version"
         echo "new_version=$new_version" >> "$GITHUB_OUTPUT"
