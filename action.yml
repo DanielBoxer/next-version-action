@@ -10,10 +10,6 @@ inputs:
     description: "Override version increment"
     required: false
 
-outputs:
-  new_version:
-    description: "The new calculated version"
-
 runs:
   using: "composite"
   steps:
@@ -74,3 +70,8 @@ runs:
         fi
         echo "New version: $new_version"
         echo "new_version=$new_version" >> "$GITHUB_OUTPUT"
+
+outputs:
+  new_version:
+    description: "The new semantic version"
+    value: ${{ steps.get_version.outputs.new_version }}
