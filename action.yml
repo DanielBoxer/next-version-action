@@ -1,5 +1,9 @@
-name: "Get Next Version"
+name: "Get Next Semantic Version Tag"
 description: "Calculates the next semantic version based on git tags"
+author: Daniel
+branding:
+  icon: "box"
+  color: "purple"
 
 inputs:
   increment:
