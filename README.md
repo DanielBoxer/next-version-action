@@ -7,7 +7,7 @@ Get Next Version is a GitHub Action that calculates the next semantic version (m
 ```yml
 - name: Get next version
   id: get_version
-  uses: danielboxer/get-next-version@v1.0.0
+  uses: danielboxer/next-version-action@v1.0.0
   with:
     # which part of the version to increment (major, minor, patch)
     increment: patch
@@ -24,6 +24,8 @@ Get Next Version is a GitHub Action that calculates the next semantic version (m
 ```
 
 This action can be combined with `workflow_dispatch` inputs to create a GUI for automating releases more easily:
+
+![Workflow GUI Example](https://github.com/user-attachments/assets/a0769056-3a14-4522-b089-f45823042c6a)
 
 ```yml
 on:
@@ -42,6 +44,17 @@ on:
       version:
         description: "Override version increment"
         required: false
+
+...
+  
+steps:
+  - name: Get Next Version
+    id: get_version
+    uses: danielboxer/next-version-action@v1.0.0
+    with:
+      increment: ${{ github.event.inputs.increment }}
+      version: ${{ github.event.inputs.version }}
+      use_v_prefix: true
 ```
 
 ## Notes
