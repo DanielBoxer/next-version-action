@@ -1,6 +1,6 @@
-# Get Next Version
+# Next Version Action
 
-Get Next Version is a GitHub Action that calculates the next semantic version (major.minor.patch) based on the latest Git tag.
+This GitHub action calculates the next semantic version (major.minor.patch) based on the latest Git tag.
 
 ## Usage
 
